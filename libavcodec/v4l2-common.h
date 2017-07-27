@@ -42,15 +42,20 @@
 #include "libavutil/pixfmt.h"
 #include "libavcodec/avcodec.h"
 
+/* for v4l_fmt_map.pack_flags */
+#define FF_V4L_PACK_AVPACKET (1 << 0)
+#define FF_V4L_PACK_AVFRAME  (1 << 1)
+
 struct v4l_fmt_map {
     enum AVPixelFormat ff_fmt;
     enum AVCodecID codec_id;
     uint32_t v4l2_fmt;
+    int pack_flags;
 };
 
 extern const struct v4l_fmt_map avpriv_v4l_fmt_conversion_table[];
 
-uint32_t avpriv_v4l_fmt_ff2v4l(enum AVPixelFormat pix_fmt, enum AVCodecID codec_id);
+uint32_t avpriv_v4l_fmt_ff2v4l(enum AVPixelFormat pix_fmt, enum AVCodecID codec_id, int pack_flags);
 enum AVPixelFormat avpriv_v4l_fmt_v4l2ff(uint32_t v4l2_fmt, enum AVCodecID codec_id);
 enum AVCodecID avpriv_v4l_fmt_v4l2codec(uint32_t v4l2_fmt);
 

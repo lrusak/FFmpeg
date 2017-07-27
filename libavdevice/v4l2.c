@@ -781,7 +781,7 @@ static int device_try_init(AVFormatContext *ctx,
 {
     int ret, i;
 
-    *desired_format = avpriv_v4l_fmt_ff2v4l(pix_fmt, ctx->video_codec_id);
+    *desired_format = avpriv_v4l_fmt_ff2v4l(pix_fmt, ctx->video_codec_id, FF_V4L_PACK_AVPACKET);
 
     if (*desired_format) {
         ret = device_init(ctx, width, height, *desired_format);
