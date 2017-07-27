@@ -31,8 +31,23 @@
  */
 
 #include <stdatomic.h>
+#include <sys/ioctl.h>
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 
-#include "v4l2-common.h"
+#include "libavutil/atomic.h"
+#include "libavutil/avassert.h"
+#include "libavutil/avstring.h"
+#include "libavutil/imgutils.h"
+#include "libavutil/parseutils.h"
+#include "libavutil/time.h"
+#include "libavcodec/v4l2-common.h"
+#include "libavformat/internal.h"
+#include "avdevice.h"
+#include "timefilter.h"
 #include <dirent.h>
 
 #if CONFIG_LIBV4L2
@@ -274,8 +289,8 @@ static void list_formats(AVFormatContext *ctx, int type)
     struct v4l2_fmtdesc vfd = { .type = V4L2_BUF_TYPE_VIDEO_CAPTURE };
 
     while(!v4l2_ioctl(s->fd, VIDIOC_ENUM_FMT, &vfd)) {
-        enum AVCodecID codec_id = ff_fmt_v4l2codec(vfd.pixelformat);
-        enum AVPixelFormat pix_fmt = ff_fmt_v4l2ff(vfd.pixelformat, codec_id);
+        enum AVCodecID codec_id = avpriv_v4l_fmt_v4l2codec(vfd.pixelformat);
+        enum AVPixelFormat pix_fmt = avpriv_v4l_fmt_v4l2ff(vfd.pixelformat, codec_id);
 
         vfd.index++;
 
@@ -766,7 +781,7 @@ static int device_try_init(AVFormatContext *ctx,
 {
     int ret, i;
 
-    *desired_format = ff_fmt_ff2v4l(pix_fmt, ctx->video_codec_id);
+    *desired_format = avpriv_v4l_fmt_ff2v4l(pix_fmt, ctx->video_codec_id);
 
     if (*desired_format) {
         ret = device_init(ctx, width, height, *desired_format);
@@ -778,14 +793,14 @@ static int device_try_init(AVFormatContext *ctx,
     }
 
     if (!*desired_format) {
-        for (i = 0; ff_fmt_conversion_table[i].codec_id != AV_CODEC_ID_NONE; i++) {
+        for (i = 0; avpriv_v4l_fmt_conversion_table[i].codec_id != AV_CODEC_ID_NONE; i++) {
             if (ctx->video_codec_id == AV_CODEC_ID_NONE ||
-                ff_fmt_conversion_table[i].codec_id == ctx->video_codec_id) {
+                avpriv_v4l_fmt_conversion_table[i].codec_id == ctx->video_codec_id) {
                 av_log(ctx, AV_LOG_DEBUG, "Trying to set codec:%s pix_fmt:%s\n",
-                       avcodec_get_name(ff_fmt_conversion_table[i].codec_id),
-                       (char *)av_x_if_null(av_get_pix_fmt_name(ff_fmt_conversion_table[i].ff_fmt), "none"));
+                       avcodec_get_name(avpriv_v4l_fmt_conversion_table[i].codec_id),
+                       (char *)av_x_if_null(av_get_pix_fmt_name(avpriv_v4l_fmt_conversion_table[i].ff_fmt), "none"));
 
-                *desired_format = ff_fmt_conversion_table[i].v4l2_fmt;
+                *desired_format = avpriv_v4l_fmt_conversion_table[i].v4l2_fmt;
                 ret = device_init(ctx, width, height, *desired_format);
                 if (ret >= 0)
                     break;
@@ -804,7 +819,7 @@ static int device_try_init(AVFormatContext *ctx,
         }
     }
 
-    *codec_id = ff_fmt_v4l2codec(*desired_format);
+    *codec_id = avpriv_v4l_fmt_v4l2codec(*desired_format);
     av_assert0(*codec_id != AV_CODEC_ID_NONE);
     return ret;
 }
@@ -937,11 +952,10 @@ static int v4l2_read_header(AVFormatContext *ctx)
     if ((res = v4l2_set_parameters(ctx)) < 0)
         goto fail;
 
-    st->codecpar->format = ff_fmt_v4l2ff(desired_format, codec_id);
+    st->codecpar->format = avpriv_v4l_fmt_v4l2ff(desired_format, codec_id);    
     if (st->codecpar->format != AV_PIX_FMT_NONE)
         s->frame_size = av_image_get_buffer_size(st->codecpar->format,
                                                  s->width, s->height, 1);
-
     if ((res = mmap_init(ctx)) ||
         (res = mmap_start(ctx)) < 0)
             goto fail;

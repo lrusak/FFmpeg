@@ -18,7 +18,7 @@
 
 #include "v4l2-common.h"
 
-const struct fmt_map ff_fmt_conversion_table[] = {
+const struct v4l_fmt_map avpriv_v4l_fmt_conversion_table[] = {
     //ff_fmt              codec_id              v4l2_fmt
     { AV_PIX_FMT_YUV420P, AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_YUV420  },
     { AV_PIX_FMT_YUV420P, AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_YVU420  },
@@ -61,43 +61,43 @@ const struct fmt_map ff_fmt_conversion_table[] = {
     { AV_PIX_FMT_NONE,    AV_CODEC_ID_NONE,     0                    },
 };
 
-uint32_t ff_fmt_ff2v4l(enum AVPixelFormat pix_fmt, enum AVCodecID codec_id)
+uint32_t avpriv_v4l_fmt_ff2v4l(enum AVPixelFormat pix_fmt, enum AVCodecID codec_id)
 {
     int i;
 
-    for (i = 0; ff_fmt_conversion_table[i].codec_id != AV_CODEC_ID_NONE; i++) {
+    for (i = 0; avpriv_v4l_fmt_conversion_table[i].codec_id != AV_CODEC_ID_NONE; i++) {
         if ((codec_id == AV_CODEC_ID_NONE ||
-             ff_fmt_conversion_table[i].codec_id == codec_id) &&
+             avpriv_v4l_fmt_conversion_table[i].codec_id == codec_id) &&
             (pix_fmt == AV_PIX_FMT_NONE ||
-             ff_fmt_conversion_table[i].ff_fmt == pix_fmt)) {
-            return ff_fmt_conversion_table[i].v4l2_fmt;
+             avpriv_v4l_fmt_conversion_table[i].ff_fmt == pix_fmt)) {
+            return avpriv_v4l_fmt_conversion_table[i].v4l2_fmt;
         }
     }
 
     return 0;
 }
 
-enum AVPixelFormat ff_fmt_v4l2ff(uint32_t v4l2_fmt, enum AVCodecID codec_id)
+enum AVPixelFormat avpriv_v4l_fmt_v4l2ff(uint32_t v4l2_fmt, enum AVCodecID codec_id)
 {
     int i;
 
-    for (i = 0; ff_fmt_conversion_table[i].codec_id != AV_CODEC_ID_NONE; i++) {
-        if (ff_fmt_conversion_table[i].v4l2_fmt == v4l2_fmt &&
-            ff_fmt_conversion_table[i].codec_id == codec_id) {
-            return ff_fmt_conversion_table[i].ff_fmt;
+    for (i = 0; avpriv_v4l_fmt_conversion_table[i].codec_id != AV_CODEC_ID_NONE; i++) {
+        if (avpriv_v4l_fmt_conversion_table[i].v4l2_fmt == v4l2_fmt &&
+            avpriv_v4l_fmt_conversion_table[i].codec_id == codec_id) {
+            return avpriv_v4l_fmt_conversion_table[i].ff_fmt;
         }
     }
 
     return AV_PIX_FMT_NONE;
 }
 
-enum AVCodecID ff_fmt_v4l2codec(uint32_t v4l2_fmt)
+enum AVCodecID avpriv_v4l_fmt_v4l2codec(uint32_t v4l2_fmt)
 {
     int i;
 
-    for (i = 0; ff_fmt_conversion_table[i].codec_id != AV_CODEC_ID_NONE; i++) {
-        if (ff_fmt_conversion_table[i].v4l2_fmt == v4l2_fmt) {
-            return ff_fmt_conversion_table[i].codec_id;
+    for (i = 0; avpriv_v4l_fmt_conversion_table[i].codec_id != AV_CODEC_ID_NONE; i++) {
+        if (avpriv_v4l_fmt_conversion_table[i].v4l2_fmt == v4l2_fmt) {
+            return avpriv_v4l_fmt_conversion_table[i].codec_id;
         }
     }
 

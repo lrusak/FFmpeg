@@ -18,7 +18,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "v4l2-common.h"
+#include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+#include "libavutil/imgutils.h"
+#include "libavutil/pixdesc.h"
+#include "libavcodec/v4l2-common.h"
 #include "avdevice.h"
 
 typedef struct {
@@ -56,7 +64,7 @@ static av_cold int write_header(AVFormatContext *s1)
 
     par = s1->streams[0]->codecpar;
 
-    v4l2_pixfmt = ff_fmt_ff2v4l(par->format, AV_CODEC_ID_RAWVIDEO);
+    v4l2_pixfmt = avpriv_v4l_fmt_ff2v4l(par->format, AV_CODEC_ID_RAWVIDEO);
     if (!v4l2_pixfmt) { // XXX: try to force them one by one?
         av_log(s1, AV_LOG_ERROR, "Unknown V4L2 pixel format equivalent for %s\n",
                av_get_pix_fmt_name(par->format));
