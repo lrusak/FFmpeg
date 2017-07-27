@@ -29,6 +29,7 @@ version <next>:
 - limiter video filter
 - libvmaf video filter
 - Dolby E decoder and SMPTE 337M demuxer
+- V4L2 mem2mem HW accelerated codecs support
 
 version 3.3:
 - CrystalHD decoder moved to new decode API
@@ -64,7 +65,6 @@ version 3.3:
 - Removed asyncts filter (use af_aresample instead)
 - Intel QSV-accelerated VP8 video decoding
 - VAAPI-accelerated deinterlacing
-
 
 version 3.2:
 - libopenmpt demuxer
@@ -104,7 +104,6 @@ version 3.2:
 - sidedata video and asidedata audio filter
 - Changed mapping of rtp MIME type G726 to codec g726le.
 - spec compliant VAAPI/DXVA2 VC-1 decoding of slices in frame-coded images
-
 
 version 3.1:
 - DXVA2-accelerated HEVC Main10 decoding

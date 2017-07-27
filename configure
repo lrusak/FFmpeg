@@ -10,7 +10,6 @@
 # Prevent locale nonsense from breaking basic text processing.
 LC_ALL=C
 export LC_ALL
-
 # make sure we are running under a compatible shell
 # try to make this part work with most shells
 
@@ -149,6 +148,7 @@ Component options:
   --disable-pixelutils     disable pixel utils in libavutil
 
 Individual component options:
+  --disable-v4l2_m2m       disable V4L2 mem2mem code [autodetect]
   --disable-everything     disable all components listed below
   --disable-encoder=NAME   disable encoder NAME
   --enable-encoder=NAME    enable encoder NAME
@@ -1432,6 +1432,7 @@ AVCODEC_COMPONENTS="
 
 AVDEVICE_COMPONENTS="
     indevs
+    v4l2_m2m
     outdevs
 "
 AVFILTER_COMPONENTS="
@@ -2269,10 +2270,12 @@ map 'eval ${v}_inline_deps=inline_asm' $ARCH_EXT_LIST_ARM
 loongson2_deps="mips"
 loongson3_deps="mips"
 v4l2_deps_any="linux_videodev2_h sys_videoio_h"
+v4l2_m2m_select="v4l2"
 mipsfpu_deps="mips"
 mipsdsp_deps="mips"
 mipsdspr2_deps="mips"
 mips32r2_deps="mips"
+vc1_v4l2m2m_decoder_deps="v4l2_m2m"
 mips32r5_deps="mips"
 mips32r6_deps="mips"
 mips64r2_deps="mips"
@@ -2283,6 +2286,8 @@ mmi_deps="mips"
 altivec_deps="ppc"
 dcbzl_deps="ppc"
 ldbrx_deps="ppc"
+vp8_v4l2m2m_decoder_deps="v4l2_m2m"
+vp8_v4l2m2m_encoder_deps="v4l2_m2m"
 ppc4xx_deps="ppc"
 vsx_deps="altivec"
 power8_deps="vsx"
@@ -2436,11 +2441,15 @@ h261_decoder_select="mpegvideo"
 h261_encoder_select="aandcttables mpegvideoenc"
 h263_decoder_select="h263_parser h263dsp mpegvideo qpeldsp"
 h263_encoder_select="aandcttables h263dsp mpegvideoenc"
+h263_v4l2m2m_decoder_deps="v4l2_m2m"
+h263_v4l2m2m_encoder_deps="v4l2_m2m"
 h263i_decoder_select="h263_decoder"
 h263p_decoder_select="h263_decoder"
 h263p_encoder_select="h263_encoder"
 h264_decoder_select="cabac golomb h264chroma h264dsp h264parse h264pred h264qpel videodsp"
 h264_decoder_suggest="error_resilience"
+h264_v4l2m2m_decoder_deps="v4l2_m2m"
+h264_v4l2m2m_encoder_deps="v4l2_m2m"
 hap_decoder_select="snappy texturedsp"
 hap_encoder_deps="libsnappy"
 hap_encoder_select="texturedspenc"
@@ -2481,6 +2490,7 @@ mpc7_decoder_select="bswapdsp mpegaudiodsp"
 mpc8_decoder_select="mpegaudiodsp"
 mpeg_xvmc_decoder_deps="X11_extensions_XvMClib_h"
 mpeg_xvmc_decoder_select="mpeg2video_decoder"
+mpeg1_v4l2m2m_decoder_deps="v4l2_m2m"
 mpegvideo_decoder_select="mpegvideo"
 mpeg1video_decoder_select="mpegvideo"
 mpeg1video_encoder_select="aandcttables mpegvideoenc h263dsp"
@@ -2488,6 +2498,8 @@ mpeg2video_decoder_select="mpegvideo"
 mpeg2video_encoder_select="aandcttables mpegvideoenc h263dsp"
 mpeg4_decoder_select="h263_decoder mpeg4video_parser"
 mpeg4_encoder_select="h263_encoder"
+mpeg4_v4l2m2m_decoder_deps="v4l2_m2m"
+mpeg4_v4l2m2m_encoder_deps="v4l2_m2m"
 msa1_decoder_select="mss34dsp"
 mscc_decoder_select="zlib"
 msmpeg4v1_decoder_select="h263_decoder"
@@ -3590,7 +3602,7 @@ done
 enable_weak audiotoolbox
 
 # Enable hwaccels by default.
-enable_weak d3d11va dxva2 vaapi vda vdpau videotoolbox_hwaccel xvmc
+enable_weak d3d11va dxva2 vaapi v4l2_m2m vda vdpau videotoolbox_hwaccel xvmc
 enable_weak xlib
 
 enable_weak cuda cuvid nvenc vda_framework videotoolbox videotoolbox_encoder
@@ -6059,6 +6071,7 @@ check_header linux/fb.h
 check_header linux/videodev.h
 check_header linux/videodev2.h
 check_code cc linux/videodev2.h "struct v4l2_frmsizeenum vfse; vfse.discrete.width = 0;" && enable_safe struct_v4l2_frmivalenum_discrete
+check_code cc linux/videodev2.h "int i = V4L2_CAP_VIDEO_M2M_MPLANE | V4L2_CAP_VIDEO_M2M;" || disable v4l2_m2m
 
 check_header sys/videoio.h
 check_code cc sys/videoio.h "struct v4l2_frmsizeenum vfse; vfse.discrete.width = 0;" && enable_safe struct_v4l2_frmivalenum_discrete

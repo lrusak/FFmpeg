@@ -19,15 +19,14 @@
 #include "v4l2-common.h"
 
 const struct v4l_fmt_map avpriv_v4l_fmt_conversion_table[] = {
-    //ff_fmt              codec_id              v4l2_fmt                  pack_flags
-    { AV_PIX_FMT_YUV420P, AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_YUV420     , FF_V4L_PACK_AVPACKET },
-    { AV_PIX_FMT_YUV420P, AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_YVU420     , FF_V4L_PACK_AVPACKET },
-    { AV_PIX_FMT_YUV422P, AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_YUV422P    , FF_V4L_PACK_AVPACKET },
+    /* ff_fmt             codec_id              v4l2_fmt                  pack_flags */
+    { AV_PIX_FMT_YUV420P, AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_YUV420     , FF_V4L_PACK_AVPACKET | FF_V4L_PACK_AVFRAME },
+    { AV_PIX_FMT_YUV422P, AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_YUV422P    , FF_V4L_PACK_AVPACKET                       },
     { AV_PIX_FMT_YUYV422, AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_YUYV       , FF_V4L_PACK_AVPACKET | FF_V4L_PACK_AVFRAME },
     { AV_PIX_FMT_UYVY422, AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_UYVY       , FF_V4L_PACK_AVPACKET | FF_V4L_PACK_AVFRAME },
-    { AV_PIX_FMT_YUV411P, AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_YUV411P    , FF_V4L_PACK_AVPACKET },
-    { AV_PIX_FMT_YUV410P, AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_YUV410     , FF_V4L_PACK_AVPACKET },
-    { AV_PIX_FMT_YUV410P, AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_YVU410     , FF_V4L_PACK_AVPACKET },
+    { AV_PIX_FMT_YUV411P, AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_YUV411P    , FF_V4L_PACK_AVPACKET                       },
+    { AV_PIX_FMT_YUV410P, AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_YUV410     , FF_V4L_PACK_AVPACKET                       },
+    { AV_PIX_FMT_YUV410P, AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_YVU410     , FF_V4L_PACK_AVPACKET                       },
     { AV_PIX_FMT_RGB555LE,AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_RGB555     , FF_V4L_PACK_AVPACKET | FF_V4L_PACK_AVFRAME },
     { AV_PIX_FMT_RGB555BE,AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_RGB555X    , FF_V4L_PACK_AVPACKET | FF_V4L_PACK_AVFRAME },
     { AV_PIX_FMT_RGB565LE,AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_RGB565     , FF_V4L_PACK_AVPACKET | FF_V4L_PACK_AVFRAME },
@@ -40,17 +39,17 @@ const struct v4l_fmt_map avpriv_v4l_fmt_conversion_table[] = {
 #ifdef V4L2_PIX_FMT_Y16
     { AV_PIX_FMT_GRAY16LE,AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_Y16        , FF_V4L_PACK_AVPACKET | FF_V4L_PACK_AVFRAME },
 #endif
-    { AV_PIX_FMT_NV12,    AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_NV12       , FF_V4L_PACK_AVPACKET },
-    { AV_PIX_FMT_NONE,    AV_CODEC_ID_MJPEG,    V4L2_PIX_FMT_MJPEG      , FF_V4L_PACK_AVPACKET },
-    { AV_PIX_FMT_NONE,    AV_CODEC_ID_MJPEG,    V4L2_PIX_FMT_JPEG       , FF_V4L_PACK_AVPACKET },
+    { AV_PIX_FMT_NV12,    AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_NV12       , FF_V4L_PACK_AVPACKET                       },
+    { AV_PIX_FMT_NONE,    AV_CODEC_ID_MJPEG,    V4L2_PIX_FMT_MJPEG      , FF_V4L_PACK_AVPACKET                       },
+    { AV_PIX_FMT_NONE,    AV_CODEC_ID_MJPEG,    V4L2_PIX_FMT_JPEG       , FF_V4L_PACK_AVPACKET                       },
 #ifdef V4L2_PIX_FMT_H264
-    { AV_PIX_FMT_NONE,    AV_CODEC_ID_H264,     V4L2_PIX_FMT_H264       , FF_V4L_PACK_AVPACKET },
+    { AV_PIX_FMT_NONE,    AV_CODEC_ID_H264,     V4L2_PIX_FMT_H264       , FF_V4L_PACK_AVPACKET                       },
 #endif
 #ifdef V4L2_PIX_FMT_MPEG4
-    { AV_PIX_FMT_NONE,    AV_CODEC_ID_MPEG4,    V4L2_PIX_FMT_MPEG4      , FF_V4L_PACK_AVPACKET },
+    { AV_PIX_FMT_NONE,    AV_CODEC_ID_MPEG4,    V4L2_PIX_FMT_MPEG4      , FF_V4L_PACK_AVPACKET                       },
 #endif
 #ifdef V4L2_PIX_FMT_CPIA1
-    { AV_PIX_FMT_NONE,    AV_CODEC_ID_CPIA,     V4L2_PIX_FMT_CPIA1      , FF_V4L_PACK_AVPACKET },
+    { AV_PIX_FMT_NONE,    AV_CODEC_ID_CPIA,     V4L2_PIX_FMT_CPIA1      , FF_V4L_PACK_AVPACKET                       },
 #endif
 #ifdef V4L2_PIX_FMT_SRGGB8
     { AV_PIX_FMT_BAYER_BGGR8, AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_SBGGR8 , FF_V4L_PACK_AVPACKET | FF_V4L_PACK_AVFRAME },
@@ -59,36 +58,36 @@ const struct v4l_fmt_map avpriv_v4l_fmt_conversion_table[] = {
     { AV_PIX_FMT_BAYER_RGGB8, AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_SRGGB8 , FF_V4L_PACK_AVPACKET | FF_V4L_PACK_AVFRAME },
 #endif
 #ifdef V4L2_PIX_FMT_NV12M
-    { AV_PIX_FMT_NV12,    AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_NV12M      , FF_V4L_PACK_AVFRAME  },
+    { AV_PIX_FMT_NV12,    AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_NV12M      , FF_V4L_PACK_AVFRAME                        },
 #endif
 #ifdef V4L2_PIX_FMT_NV21M
-    { AV_PIX_FMT_NV21,    AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_NV21M      , FF_V4L_PACK_AVFRAME  },
+    { AV_PIX_FMT_NV21,    AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_NV21M      , FF_V4L_PACK_AVFRAME                        },
 #endif
 #ifdef V4L2_PIX_FMT_YUV420M
-    { AV_PIX_FMT_YUV420P, AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_YUV420M    , FF_V4L_PACK_AVFRAME  },
+    { AV_PIX_FMT_YUV420P, AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_YUV420M    , FF_V4L_PACK_AVFRAME                        },
 #endif
 #ifdef V4L2_PIX_FMT_NV16M
-    { AV_PIX_FMT_NV16,    AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_NV16M      , FF_V4L_PACK_AVFRAME  },
+    { AV_PIX_FMT_NV16,    AV_CODEC_ID_RAWVIDEO, V4L2_PIX_FMT_NV16M      , FF_V4L_PACK_AVFRAME                        },
 #endif
 #ifdef V4L2_PIX_FMT_DV
-    { AV_PIX_FMT_NONE,    AV_CODEC_ID_DVVIDEO,  V4L2_PIX_FMT_DV         , FF_V4L_PACK_AVPACKET },
+    { AV_PIX_FMT_NONE,    AV_CODEC_ID_DVVIDEO,  V4L2_PIX_FMT_DV         , FF_V4L_PACK_AVPACKET                       },
 #endif
 #ifdef V4L2_PIX_FMT_H263
-    { AV_PIX_FMT_NONE,    AV_CODEC_ID_H263,     V4L2_PIX_FMT_H263       , FF_V4L_PACK_AVPACKET },
+    { AV_PIX_FMT_NONE,    AV_CODEC_ID_H263,     V4L2_PIX_FMT_H263       , FF_V4L_PACK_AVPACKET                       },
 #endif
 #ifdef V4L2_PIX_FMT_MPEG1
-    { AV_PIX_FMT_NONE,    AV_CODEC_ID_MPEG1VIDEO, V4L2_PIX_FMT_MPEG1    , FF_V4L_PACK_AVPACKET },
+    { AV_PIX_FMT_NONE,    AV_CODEC_ID_MPEG1VIDEO, V4L2_PIX_FMT_MPEG1    , FF_V4L_PACK_AVPACKET                       },
 #endif
 #ifdef V4L2_PIX_FMT_MPEG2
-    { AV_PIX_FMT_NONE,    AV_CODEC_ID_MPEG2VIDEO, V4L2_PIX_FMT_MPEG2    , FF_V4L_PACK_AVPACKET },
+    { AV_PIX_FMT_NONE,    AV_CODEC_ID_MPEG2VIDEO, V4L2_PIX_FMT_MPEG2    , FF_V4L_PACK_AVPACKET                       },
 #endif
 #ifdef V4L2_PIX_FMT_VC1_ANNEX_G
-    { AV_PIX_FMT_NONE,    AV_CODEC_ID_VC1,      V4L2_PIX_FMT_VC1_ANNEX_G, FF_V4L_PACK_AVPACKET },
+    { AV_PIX_FMT_NONE,    AV_CODEC_ID_VC1,      V4L2_PIX_FMT_VC1_ANNEX_G, FF_V4L_PACK_AVPACKET                       },
 #endif
 #ifdef V4L2_PIX_FMT_VP8
-    { AV_PIX_FMT_NONE,    AV_CODEC_ID_VP8,      V4L2_PIX_FMT_VP8        , FF_V4L_PACK_AVPACKET },
+    { AV_PIX_FMT_NONE,    AV_CODEC_ID_VP8,      V4L2_PIX_FMT_VP8        , FF_V4L_PACK_AVPACKET                       },
 #endif
-    { AV_PIX_FMT_NONE,    AV_CODEC_ID_NONE,     0                    },
+    { AV_PIX_FMT_NONE,    AV_CODEC_ID_NONE,     0                       , 0                                          },
 };
 
 uint32_t avpriv_v4l_fmt_ff2v4l(enum AVPixelFormat pix_fmt, enum AVCodecID codec_id, int pack_flags)
@@ -101,6 +100,7 @@ uint32_t avpriv_v4l_fmt_ff2v4l(enum AVPixelFormat pix_fmt, enum AVCodecID codec_
             (pix_fmt == AV_PIX_FMT_NONE ||
              avpriv_v4l_fmt_conversion_table[i].ff_fmt == pix_fmt) &&
              (avpriv_v4l_fmt_conversion_table[i].pack_flags & pack_flags)) {
+
             return avpriv_v4l_fmt_conversion_table[i].v4l2_fmt;
         }
     }
