@@ -6,7 +6,7 @@ HEADERS = avcodec.h                                                     \
           avfft.h                                                       \
           d3d11va.h                                                     \
           dirac.h                                                       \
-          v4l2.h                                                        \
+          v4l2_m2m.h                                                    \
           dv_profile.h                                                  \
           dxva2.h                                                       \
           jni.h                                                         \
