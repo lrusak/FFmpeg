@@ -241,4 +241,6 @@ AVCodec ff_ ## NAME ## _v4l2m2m_decoder = { \
         M2MDEC(vp8  , "VP8"  , AV_CODEC_ID_VP8, NULL);
 #endif
 
-
+#if CONFIG_VP9_V4L2M2M_DECODER
+        M2MDEC(vp9  , "VP9"  , AV_CODEC_ID_VP9, NULL);
+#endif

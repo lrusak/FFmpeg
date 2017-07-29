@@ -380,6 +380,7 @@ static void register_all(void)
     REGISTER_DECODER(VP8,               vp8);
     REGISTER_ENCDEC (VP8_V4L2M2M,       vp8_v4l2m2m);
     REGISTER_DECODER(VP9,               vp9);
+    REGISTER_ENCDEC (VP9_V4L2M2M,       vp9_v4l2m2m);
     REGISTER_DECODER(VQA,               vqa);
     REGISTER_DECODER(BITPACKED,         bitpacked);
     REGISTER_DECODER(WEBP,              webp);

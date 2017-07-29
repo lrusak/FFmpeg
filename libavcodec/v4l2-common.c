@@ -87,6 +87,9 @@ const struct v4l_fmt_map avpriv_v4l_fmt_conversion_table[] = {
 #ifdef V4L2_PIX_FMT_VP8
     { AV_PIX_FMT_NONE,    AV_CODEC_ID_VP8,      V4L2_PIX_FMT_VP8        , FF_V4L_PACK_AVPACKET                       },
 #endif
+#ifdef V4L2_PIX_FMT_VP9
+    { AV_PIX_FMT_NONE,    AV_CODEC_ID_VP9,	V4L2_PIX_FMT_VP9        , FF_V4L_PACK_AVPACKET                       },
+#endif
     { AV_PIX_FMT_NONE,    AV_CODEC_ID_NONE,     0                       , 0                                          },
 };
 
