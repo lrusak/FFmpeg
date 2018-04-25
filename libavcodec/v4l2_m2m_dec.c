@@ -23,11 +23,17 @@
 
 #include <linux/videodev2.h>
 #include <sys/ioctl.h>
+
+#include "libavutil/hwcontext.h"
+#include "libavutil/hwcontext_drm.h"
 #include "libavutil/pixfmt.h"
 #include "libavutil/pixdesc.h"
 #include "libavutil/opt.h"
 #include "libavcodec/avcodec.h"
 #include "libavcodec/decode.h"
+
+#include "libavcodec/hwaccel.h"
+#include "libavcodec/internal.h"
 
 #include "v4l2_context.h"
 #include "v4l2_m2m.h"
@@ -183,6 +189,15 @@ static av_cold int v4l2_decode_init(AVCodecContext *avctx)
     capture->av_codec_id = AV_CODEC_ID_RAWVIDEO;
     capture->av_pix_fmt = avctx->pix_fmt;
 
+    /* the client requests the codec to generate DRM frames:
+     *   - data[0] will therefore point to the returned AVDRMFrameDescriptor
+     *       check the ff_v4l2_buffer_to_avframe conversion function.
+     *   - the DRM frame format is passed in the DRM frame descriptor layer.
+     *       check the v4l2_get_drm_frame function.
+     */
+    if (ff_get_format(avctx, avctx->codec->pix_fmts) == AV_PIX_FMT_DRM_PRIME)
+        s->output_drm = 1;
+
     ret = ff_v4l2_m2m_codec_init(avctx);
     if (ret) {
         av_log(avctx, AV_LOG_ERROR, "can't configure decoder\n");
@@ -200,6 +215,11 @@ static const AVOption options[] = {
     { "num_capture_buffers", "Number of buffers in the capture context",
         OFFSET(num_capture_buffers), AV_OPT_TYPE_INT, {.i64 = 20}, 20, INT_MAX, FLAGS },
     { NULL},
+};
+
+static const AVCodecHWConfigInternal *v4l2_m2m_hw_configs[] = {
+    HW_CONFIG_INTERNAL(DRM_PRIME),
+    NULL
 };
 
 #define M2MDEC_CLASS(NAME) \
@@ -222,7 +242,10 @@ static const AVOption options[] = {
         .init           = v4l2_decode_init, \
         .receive_frame  = v4l2_receive_frame, \
         .close          = ff_v4l2_m2m_codec_end, \
+        .pix_fmts       = (const enum AVPixelFormat[]) { AV_PIX_FMT_DRM_PRIME, \
+                                                         AV_PIX_FMT_NONE}, \
         .bsfs           = bsf_name, \
+        .hw_configs     = v4l2_m2m_hw_configs, \
         .capabilities   = AV_CODEC_CAP_HARDWARE | AV_CODEC_CAP_DELAY, \
         .wrapper_name   = "v4l2m2m", \
     };
