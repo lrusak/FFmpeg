@@ -263,7 +263,7 @@ static V4L2Buffer* v4l2_dequeue_v4l2buf(V4L2Context *ctx, int timeout)
     /* if we are draining and there are no more capture buffers queued in the driver we are done */
     if (!V4L2_TYPE_IS_OUTPUT(ctx->type) && ctx_to_m2mctx(ctx)->draining) {
         for (i = 0; i < ctx->num_buffers; i++) {
-            /* catpture buffer initialization happens during decode hence
+            /* capture buffer initialization happens during decode hence
              * detection happens at runtime
              */
             if (!ctx->buffers)
