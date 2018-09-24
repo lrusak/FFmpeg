@@ -263,8 +263,7 @@ static const AVCodecHWConfigInternal *v4l2_m2m_hw_configs[] = {
                                                          AV_PIX_FMT_NONE}, \
         .bsfs           = bsf_name, \
         .hw_configs     = v4l2_m2m_hw_configs, \
-        .capabilities   = AV_CODEC_CAP_HARDWARE | AV_CODEC_CAP_DELAY, \
-	                      AV_CODEC_CAP_AVOID_PROBING, \
+        .capabilities   = AV_CODEC_CAP_HARDWARE | AV_CODEC_CAP_DELAY | AV_CODEC_CAP_AVOID_PROBING, \
         .wrapper_name   = "v4l2m2m", \
     };
 
