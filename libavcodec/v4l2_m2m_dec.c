@@ -214,6 +214,15 @@ static av_cold int v4l2_decode_init(AVCodecContext *avctx)
         break;
     }
 
+    s->device_ref = av_hwdevice_ctx_alloc(AV_HWDEVICE_TYPE_DRM);
+    if (!s->device_ref) {
+        ret = AVERROR(ENOMEM);
+        return ret;
+    }
+    ret = av_hwdevice_ctx_init(s->device_ref);
+    if (ret < 0)
+        return ret;
+
     ret = ff_v4l2_m2m_codec_init(avctx);
     if (ret) {
         av_log(avctx, AV_LOG_ERROR, "can't configure decoder\n");

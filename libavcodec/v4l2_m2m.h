@@ -60,6 +60,8 @@ typedef struct V4L2m2mContext {
     /* Reference to self; only valid while codec is active. */
     AVBufferRef *self_ref;
 
+    AVBufferRef *device_ref;
+
     /* generate DRM frames */
     int output_drm;
 } V4L2m2mContext;
