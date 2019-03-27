@@ -739,6 +739,9 @@ const enum AVPixelFormat ff_h263_hwaccel_pixfmt_list_420[] = {
 #if CONFIG_H263_VIDEOTOOLBOX_HWACCEL || CONFIG_MPEG4_VIDEOTOOLBOX_HWACCEL
     AV_PIX_FMT_VIDEOTOOLBOX,
 #endif
+#if CONFIG_H263_V4L2NORMAL_HWACCEL || CONFIG_MPEG4_V4L2NORMAL_HWACCEL
+    AV_PIX_FMT_DRM_PRIME,
+#endif
     AV_PIX_FMT_YUV420P,
     AV_PIX_FMT_NONE
 };
@@ -784,6 +787,9 @@ AVCodec ff_h263p_decoder = {
 #endif
 #if CONFIG_H263_VIDEOTOOLBOX_HWACCEL
                         HWACCEL_VIDEOTOOLBOX(h263),
+#endif
+#if CONFIG_H263_V4L2NORMAL_HWACCEL
+                        HWACCEL_V4L2NORMAL(h263),
 #endif
                         NULL
                     },

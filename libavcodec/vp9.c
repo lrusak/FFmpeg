@@ -173,7 +173,8 @@ static int update_size(AVCodecContext *avctx, int w, int h)
 #define HWACCEL_MAX (CONFIG_VP9_DXVA2_HWACCEL + \
                      CONFIG_VP9_D3D11VA_HWACCEL * 2 + \
                      CONFIG_VP9_NVDEC_HWACCEL + \
-                     CONFIG_VP9_VAAPI_HWACCEL)
+                     CONFIG_VP9_VAAPI_HWACCEL + \
+                     CONFIG_VP9_V4L2NORMAL_HWACCEL)
     enum AVPixelFormat pix_fmts[HWACCEL_MAX + 2], *fmtp = pix_fmts;
     VP9Context *s = avctx->priv_data;
     uint8_t *p;
@@ -209,6 +210,9 @@ static int update_size(AVCodecContext *avctx, int w, int h)
 #endif
 #if CONFIG_VP9_VAAPI_HWACCEL
             *fmtp++ = AV_PIX_FMT_VAAPI;
+#endif
+#if CONFIG_VP9_V4L2NORMAL_HWACCEL
+            *fmtp++ = AV_PIX_FMT_DRM_PRIME;
 #endif
             break;
         }
@@ -1813,6 +1817,9 @@ AVCodec ff_vp9_decoder = {
 #endif
 #if CONFIG_VP9_VAAPI_HWACCEL
                                HWACCEL_VAAPI(vp9),
+#endif
+#if CONFIG_VP9_V4L2NORMAL_HWACCEL
+                               HWACCEL_V4L2NORMAL(vp9),
 #endif
                                NULL
                            },

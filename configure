@@ -325,6 +325,7 @@ External library support:
   --enable-omx-rpi         enable OpenMAX IL code for Raspberry Pi [no]
   --enable-rkmpp           enable Rockchip Media Process Platform code [no]
   --disable-v4l2-m2m       disable V4L2 mem2mem code [autodetect]
+  --enable-v4l2-normal     enable V4L2 normal API code [no]
   --disable-vaapi          disable Video Acceleration API (mainly Unix/Intel) code [autodetect]
   --disable-vdpau          disable Nvidia Video Decode and Presentation API for Unix code [autodetect]
   --disable-videotoolbox   disable VideoToolbox code [autodetect]
@@ -1784,6 +1785,7 @@ HWACCEL_LIBRARY_LIST="
     mmal
     omx
     opencl
+    v4l2_normal
 "
 
 DOCUMENT_LIST="
@@ -2788,11 +2790,14 @@ nvdec_deps="ffnvcodec"
 videotoolbox_hwaccel_deps="videotoolbox pthreads"
 videotoolbox_hwaccel_extralibs="-framework QuartzCore"
 xvmc_deps="X11_extensions_XvMClib_h"
+v4l2_normal_deps="linux_videodev2_h"
 
 h263_vaapi_hwaccel_deps="vaapi"
 h263_vaapi_hwaccel_select="h263_decoder"
 h263_videotoolbox_hwaccel_deps="videotoolbox"
 h263_videotoolbox_hwaccel_select="h263_decoder"
+h263_v4l2normal_hwaccel_deps="v4l2_normal h263_v4l2_normal"
+h263_v4l2normal_hwaccel_select="h263_decoder"
 h264_d3d11va_hwaccel_deps="d3d11va"
 h264_d3d11va_hwaccel_select="h264_decoder"
 h264_d3d11va2_hwaccel_deps="d3d11va"
@@ -2801,6 +2806,8 @@ h264_dxva2_hwaccel_deps="dxva2"
 h264_dxva2_hwaccel_select="h264_decoder"
 h264_nvdec_hwaccel_deps="nvdec"
 h264_nvdec_hwaccel_select="h264_decoder"
+h264_v4l2normal_hwaccel_deps="v4l2_normal h264_v4l2_normal"
+h264_v4l2normal_hwaccel_select="h264_decoder"
 h264_vaapi_hwaccel_deps="vaapi"
 h264_vaapi_hwaccel_select="h264_decoder"
 h264_vdpau_hwaccel_deps="vdpau"
@@ -2849,6 +2856,8 @@ mpeg2_vdpau_hwaccel_deps="vdpau"
 mpeg2_vdpau_hwaccel_select="mpeg2video_decoder"
 mpeg2_videotoolbox_hwaccel_deps="videotoolbox"
 mpeg2_videotoolbox_hwaccel_select="mpeg2video_decoder"
+mpeg2_v4l2normal_hwaccel_deps="v4l2_normal mpeg2_v4l2_normal"
+mpeg2_v4l2normal_hwaccel_select="mpeg2video_decoder"
 mpeg2_xvmc_hwaccel_deps="xvmc"
 mpeg2_xvmc_hwaccel_select="mpeg2video_decoder"
 mpeg4_nvdec_hwaccel_deps="nvdec"
@@ -2859,6 +2868,8 @@ mpeg4_vdpau_hwaccel_deps="vdpau"
 mpeg4_vdpau_hwaccel_select="mpeg4_decoder"
 mpeg4_videotoolbox_hwaccel_deps="videotoolbox"
 mpeg4_videotoolbox_hwaccel_select="mpeg4_decoder"
+mpeg4_v4l2normal_hwaccel_deps="v4l2_normal mpeg4_v4l2_normal"
+mpeg4_v4l2normal_hwaccel_select="mpeg4_decoder"
 vc1_d3d11va_hwaccel_deps="d3d11va"
 vc1_d3d11va_hwaccel_select="vc1_decoder"
 vc1_d3d11va2_hwaccel_deps="d3d11va"
@@ -2875,6 +2886,8 @@ vp8_nvdec_hwaccel_deps="nvdec"
 vp8_nvdec_hwaccel_select="vp8_decoder"
 vp8_vaapi_hwaccel_deps="vaapi VAPictureParameterBufferVP8"
 vp8_vaapi_hwaccel_select="vp8_decoder"
+vp8_v4l2normal_hwaccel_deps="v4l2_normal vp8_v4l2_normal"
+vp8_v4l2normal_hwaccel_select="vp8_decoder"
 vp9_d3d11va_hwaccel_deps="d3d11va DXVA_PicParams_VP9"
 vp9_d3d11va_hwaccel_select="vp9_decoder"
 vp9_d3d11va2_hwaccel_deps="d3d11va DXVA_PicParams_VP9"
@@ -2885,6 +2898,8 @@ vp9_nvdec_hwaccel_deps="nvdec"
 vp9_nvdec_hwaccel_select="vp9_decoder"
 vp9_vaapi_hwaccel_deps="vaapi VADecPictureParameterBufferVP9_bit_depth"
 vp9_vaapi_hwaccel_select="vp9_decoder"
+vp9_v4l2normal_hwaccel_deps="v4l2_normal vp9_v4l2_normal"
+vp9_v4l2normal_hwaccel_select="vp9_decoder"
 wmv3_d3d11va_hwaccel_select="vc1_d3d11va_hwaccel"
 wmv3_d3d11va2_hwaccel_select="vc1_d3d11va2_hwaccel"
 wmv3_dxva2_hwaccel_select="vc1_dxva2_hwaccel"
@@ -6232,6 +6247,13 @@ check_cc h263_v4l2_m2m linux/videodev2.h "int i = V4L2_PIX_FMT_H263;"
 check_cc h264_v4l2_m2m linux/videodev2.h "int i = V4L2_PIX_FMT_H264;"
 check_cc vp8_v4l2_m2m linux/videodev2.h "int i = V4L2_PIX_FMT_VP8;"
 check_cc vp9_v4l2_m2m linux/videodev2.h "int i = V4L2_PIX_FMT_VP9;"
+
+check_cc h264_v4l2_normal linux/videodev2.h "int i = V4L2_PIX_FMT_H264;"
+check_cc mpeg4_v4l2_normal linux/videodev2.h "int i = V4L2_PIX_FMT_MPEG4;"
+check_cc mpeg2_v4l2_normal linux/videodev2.h "int i = V4L2_PIX_FMT_MPEG2;"
+check_cc h263_v4l2_normal linux/videodev2.h "int i = V4L2_PIX_FMT_H263;"
+check_cc vp8_v4l2_normal linux/videodev2.h "int i = V4L2_PIX_FMT_VP8;"
+check_cc vp9_v4l2_normal linux/videodev2.h "int i = V4L2_PIX_FMT_VP9;"
 
 check_header sys/videoio.h
 test_code cc sys/videoio.h "struct v4l2_frmsizeenum vfse; vfse.discrete.width = 0;" && enable_sanitized struct_v4l2_frmivalenum_discrete
