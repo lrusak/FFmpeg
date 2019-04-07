@@ -324,7 +324,7 @@ External library support:
   --enable-omx             enable OpenMAX IL code [no]
   --enable-omx-rpi         enable OpenMAX IL code for Raspberry Pi [no]
   --enable-rkmpp           enable Rockchip Media Process Platform code [no]
-  --disable-v4l2-m2m       disable V4L2 mem2mem code [autodetect]
+  --enable-v4l2-prime      enable V4L2 mem2mem code (DRM PRIME) [no]
   --disable-vaapi          disable Video Acceleration API (mainly Unix/Intel) code [autodetect]
   --disable-vdpau          disable Nvidia Video Decode and Presentation API for Unix code [autodetect]
   --disable-videotoolbox   disable VideoToolbox code [autodetect]
@@ -1784,6 +1784,7 @@ HWACCEL_LIBRARY_LIST="
     mmal
     omx
     opencl
+    v4l2_prime
 "
 
 DOCUMENT_LIST="
@@ -2788,6 +2789,7 @@ nvdec_deps="ffnvcodec"
 videotoolbox_hwaccel_deps="videotoolbox pthreads"
 videotoolbox_hwaccel_extralibs="-framework QuartzCore"
 xvmc_deps="X11_extensions_XvMClib_h"
+v4l2_prime_deps="linux_videodev2_h libdrm"
 
 h263_vaapi_hwaccel_deps="vaapi"
 h263_vaapi_hwaccel_select="h263_decoder"
@@ -2931,6 +2933,8 @@ h264_vaapi_encoder_deps="VAEncPictureParameterBufferH264"
 h264_vaapi_encoder_select="cbs_h264 vaapi_encode"
 h264_v4l2m2m_decoder_deps="v4l2_m2m h264_v4l2_m2m"
 h264_v4l2m2m_encoder_deps="v4l2_m2m h264_v4l2_m2m"
+h264_v4l2_prime_decoder_deps="v4l2_prime"
+h264_v4l2_prime_decoder_select="h264_mp4toannexb_bsf"
 hevc_amf_encoder_deps="amf"
 hevc_cuvid_decoder_deps="cuvid"
 hevc_cuvid_decoder_select="hevc_mp4toannexb_bsf"
@@ -6235,6 +6239,9 @@ check_cc vp9_v4l2_m2m linux/videodev2.h "int i = V4L2_PIX_FMT_VP9;"
 
 check_header sys/videoio.h
 test_code cc sys/videoio.h "struct v4l2_frmsizeenum vfse; vfse.discrete.width = 0;" && enable_sanitized struct_v4l2_frmivalenum_discrete
+
+check_cc v4l2_prime linux/videodev2.h "int i = V4L2_CAP_VIDEO_M2M_MPLANE | V4L2_CAP_VIDEO_M2M | V4L2_BUF_FLAG_LAST;"
+check_cc h264_v4l2_prime linux/videodev2.h "int i = V4L2_PIX_FMT_H264;"
 
 check_lib user32 "windows.h winuser.h" GetShellWindow -luser32
 check_lib vfw32 "windows.h vfw.h" capCreateCaptureWindow -lvfw32
