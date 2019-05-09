@@ -147,6 +147,10 @@ typedef struct AVDRMFrameDescriptor {
      * Array of layers in the frame.
      */
     AVDRMLayerDescriptor layers[AV_DRM_MAX_PLANES];
+    /**
+     * Format of the frame (DRM_FORMAT_*).
+     */
+    uint32_t format;
 } AVDRMFrameDescriptor;
 
 /**
