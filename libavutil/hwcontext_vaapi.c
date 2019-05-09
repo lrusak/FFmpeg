@@ -1125,6 +1125,43 @@ static void vaapi_unmap_to_drm_esh(AVHWFramesContext *hwfc,
     av_freep(&drm_desc);
 }
 
+static uint32_t vaapi_va_fourcc_to_drm_format(uint32_t fourcc)
+{
+    switch (fourcc) {
+    case VA_FOURCC_NV12:
+        return DRM_FORMAT_NV12;
+    case VA_FOURCC_I420:
+        return DRM_FORMAT_YUV420;
+    case VA_FOURCC_YV12:
+        return DRM_FORMAT_YVU420;
+    case VA_FOURCC_YV16:
+        return DRM_FORMAT_YVU422;
+    case VA_FOURCC_YUY2:
+        return DRM_FORMAT_YUYV;
+    case VA_FOURCC_UYVY:
+        return DRM_FORMAT_UYVY;
+    case VA_FOURCC_Y800:
+        return DRM_FORMAT_R8;
+#ifdef DRM_FORMAT_P010
+    case VA_FOURCC_P010:
+        return DRM_FORMAT_P010;
+#endif
+    case VA_FOURCC_RGBA:
+        return DRM_FORMAT_ABGR8888;
+    case VA_FOURCC_RGBX:
+        return DRM_FORMAT_XBGR8888;
+    case VA_FOURCC_BGRA:
+        return DRM_FORMAT_ARGB8888;
+    case VA_FOURCC_BGRX:
+        return DRM_FORMAT_XRGB8888;
+    case VA_FOURCC_ARGB:
+        return DRM_FORMAT_BGRA8888;
+    case VA_FOURCC_ABGR:
+        return DRM_FORMAT_RGBA8888;
+    }
+    return 0;
+}
+
 static int vaapi_map_to_drm_esh(AVHWFramesContext *hwfc, AVFrame *dst,
                                 const AVFrame *src, int flags)
 {
@@ -1182,6 +1219,7 @@ static int vaapi_map_to_drm_esh(AVHWFramesContext *hwfc, AVFrame *dst,
                 va_desc.layers[i].pitch[j];
         }
     }
+    drm_desc->format = vaapi_va_fourcc_to_drm_format(va_desc.fourcc);
 
     err = ff_hwframe_map_create(src->hw_frames_ctx, dst, src,
                                 &vaapi_unmap_to_drm_esh, drm_desc);
