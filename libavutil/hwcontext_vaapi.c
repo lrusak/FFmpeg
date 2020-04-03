@@ -1141,6 +1141,7 @@ static uint32_t vaapi_va_fourcc_to_drm_format(uint32_t fourcc)
         return DRM_FORMAT_R8;
 #ifdef DRM_FORMAT_P010
     case VA_FOURCC_P010:
+    case VA_FOURCC_P016:
         return DRM_FORMAT_P010;
 #endif
     case VA_FOURCC_RGBA:
